@@ -10,9 +10,13 @@
         <module name="springboot-elasticsearch" />
         <module name="springboot-study" />
         <module name="swagger2" />
+        <module name="aop" />
+        <module name="crawler" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="aop" target="1.8" />
+      <module name="crawler" target="1.8" />
       <module name="springboot-elasticsearch" target="1.8" />
       <module name="springboot-study" target="1.8" />
       <module name="swagger2" target="1.8" />
