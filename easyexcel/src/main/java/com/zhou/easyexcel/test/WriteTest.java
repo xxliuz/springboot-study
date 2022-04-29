@@ -1,13 +1,10 @@
 package com.zhou.easyexcel.test;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.URLEncoder;
+import java.util.*;
 
 
 import com.alibaba.excel.EasyExcel;
@@ -30,6 +27,7 @@ import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.util.BooleanUtils;
 import com.alibaba.excel.util.FileUtils;
 import com.alibaba.excel.util.ListUtils;
+import com.alibaba.excel.util.MapUtils;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.handler.context.CellWriteHandlerContext;
 import com.alibaba.excel.write.merge.LoopMergeStrategy;
@@ -40,6 +38,7 @@ import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 
+import com.alibaba.fastjson.JSON;
 import com.zhou.easyexcel.entity.*;
 import com.zhou.easyexcel.handler.CommentWriteHandler;
 import com.zhou.easyexcel.handler.CustomCellWriteHandler;
@@ -53,15 +52,17 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @Author: zhou.liu
  * @Date: 2022/4/28 16:53
  * @Description:
  */
-@Ignore
+//@Ignore
 public class WriteTest {
 
-    public static final String path = "";
+    public static final String path = "D:/";
     /**
      * 最简单的写
      * <p>
@@ -810,6 +811,52 @@ public class WriteTest {
             list.add(data);
         }
         return list;
+    }
+    /**
+     * 文件下载（失败了会返回一个有部分数据的Excel）
+     * <p>
+     * 1. 创建excel对应的实体对象 参照{@link DemoData}
+     * <p>
+     * 2. 设置返回的 参数
+     * <p>
+     * 3. 直接写，这里注意，finish的时候会自动关闭OutputStream,当然你外面再关闭流问题不大
+     */
+    public void download(HttpServletResponse response) throws IOException {
+        // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(), DemoData.class).sheet("模板").doWrite(data());
+    }
+
+    /**
+     * 文件下载并且失败的时候返回json（默认失败了会返回一个有部分数据的Excel）
+     *
+     * @since 2.1.1
+     */
+    public void downloadFailedUsingJson(HttpServletResponse response) throws IOException {
+        // 这里使用swagger 会导致各种问题，请直接用浏览器或者用postman
+        try {
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+            String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            // 这里需要设置不关闭流
+            EasyExcel.write(response.getOutputStream(), DemoData.class).autoCloseStream(Boolean.FALSE).sheet("模板")
+                    .doWrite(data());
+        } catch (Exception e) {
+            // 重置response
+            response.reset();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
+            Map<String, String> map = MapUtils.newHashMap();
+            map.put("status", "failure");
+            map.put("message", "下载文件失败" + e.getMessage());
+            response.getWriter().println(JSON.toJSONString(map));
+        }
     }
 
 }
