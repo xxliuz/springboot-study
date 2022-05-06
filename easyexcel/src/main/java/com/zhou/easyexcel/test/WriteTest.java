@@ -1,8 +1,6 @@
 package com.zhou.easyexcel.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -104,6 +102,30 @@ public class WriteTest {
             excelWriter = EasyExcel.write(fileName, DemoData.class).build();
             WriteSheet writeSheet = EasyExcel.writerSheet("模板").build();
             excelWriter.write(data(), writeSheet);
+        } finally {
+            // 千万别忘记finish 会帮忙关闭流
+            if (excelWriter != null) {
+                excelWriter.finish();
+            }
+        }
+    }
+
+    @Test
+    public void simpleWrite() throws IOException {
+        // 写法3
+        String fileName = path + "simpleWrite" + System.currentTimeMillis() + ".xlsx";
+        OutputStream os = new ByteArrayOutputStream();
+        // 这里 需要指定写用哪个class去写
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(fileName).build();
+            for(int i=0;i<3;i++) {
+                WriteSheet writeSheet = EasyExcel.writerSheet("模板"+i).build();
+                for (int j = 0; j < 3; j++) {
+                    WriteTable writeTable = EasyExcel.writerTable(j+1).head(DemoData.class).needHead(Boolean.TRUE).build();
+                    excelWriter.write(data(), writeSheet, writeTable);
+                }
+            }
         } finally {
             // 千万别忘记finish 会帮忙关闭流
             if (excelWriter != null) {
