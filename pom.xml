@@ -4,7 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.zhou</groupId>
     <artifactId>springboot-study</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>cas</module>
+    </modules>
     <name>springboot-study</name>
     <description>springboot-study project</description>
 
