@@ -1,0 +1,13 @@
+# 应用名称
+spring:
+  application:
+   name: scheduletask
+# 下面的配置等同于 TaskConfig
+#  task:
+#   scheduling:
+#    pool:
+#     size: 20
+#    thread-name-prefix: Job-Thread-
+
+schedule:
+ jobConfig: 0/10 * * * * ?

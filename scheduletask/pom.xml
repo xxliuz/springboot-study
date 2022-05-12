@@ -2,15 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.zhou</groupId>
+        <artifactId>springboot-study</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <groupId>com.zhou</groupId>
-    <artifactId>springboot-study</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>scheduletask</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <modules>
-        <module>cas</module>
-    </modules>
-    <name>springboot-study</name>
-    <description>springboot-study project</description>
+    <name>scheduletask</name>
+    <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -37,14 +38,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.28</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.10</version>
         </dependency>
     </dependencies>
 
@@ -77,7 +73,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.zhou.SpringbootStudyApplication</mainClass>
+                    <mainClass>com.zhou.scheduletask.ScheduletaskApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
