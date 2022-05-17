@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="redis" />
+        <module name="jacoco" />
         <module name="crawler" />
         <module name="scheduletask" />
         <module name="springboot-elasticsearch" />
@@ -24,6 +25,7 @@
       <module name="cas" target="1.8" />
       <module name="crawler" target="1.8" />
       <module name="easyexcel" target="1.8" />
+      <module name="jacoco" target="1.8" />
       <module name="redis" target="1.8" />
       <module name="rocketmq" target="1.8" />
       <module name="scheduletask" target="1.8" />
